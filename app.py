@@ -49,7 +49,7 @@ def cached(url):
     if "user" in session:
         user = session["user"]
         random = randint(1, 100)
-        return f'number:{random}'
+        return render_template("profile.html", balance = random, username = user)    
     else:
         return redirect("/login")
 
