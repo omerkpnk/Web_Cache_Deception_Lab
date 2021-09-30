@@ -1,9 +1,9 @@
-from flask import Flask, redirect, render_template,session,url_for,request
+from flask import Flask,redirect, render_template,session,request
 from flask_caching import Cache
 from random import randint
 from werkzeug.routing import BaseConverter
 from datetime import timedelta
-
+import flask
 cache = Cache()
 
 app = Flask(__name__)
@@ -39,7 +39,9 @@ def profile():
     if "user" in session:
         user = session["user"]
         random = randint(1, 100)
-        return render_template("profile.html", balance = random, username = user)
+        resp = flask.Response(render_template("profile.html", balance = random, username = user))
+        resp.headers["Cache-Control"] = "no-store, no-cache"
+        return resp    
     else:
         return redirect("/login")
 
@@ -49,7 +51,9 @@ def cached(url):
     if "user" in session:
         user = session["user"]
         random = randint(1, 100)
-        return render_template("profile.html", balance = random, username = user)    
+        resp = flask.Response(render_template("profile.html", balance = random, username = user))
+        resp.headers["Cache-Control"] = "no-store, no-cache"
+        return resp    
     else:
         return redirect("/login")
 
